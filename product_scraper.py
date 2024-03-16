@@ -3,7 +3,7 @@ import requests
 import re
 
 
-def product_scraperino(url):
+def product_scraper(url):
     try:
         html = requests.get(url)
 
@@ -24,4 +24,4 @@ def product_scraperino(url):
         print("Oops...")
 
 
-product_scraperino('https://punkcake.rocks/products/sticky-toffee-pecan-and-custard-cake?pr_prod_strat=jac&pr_rec_id=8c5b43646&pr_rec_pid=4805918818406&pr_ref_pid=4590468104294&pr_seq=uniform')
+product_scraper('https://punkcake.rocks/products/sticky-toffee-pecan-and-custard-cake?pr_prod_strat=jac&pr_rec_id=8c5b43646&pr_rec_pid=4805918818406&pr_ref_pid=4590468104294&pr_seq=uniform')
