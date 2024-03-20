@@ -1,14 +1,51 @@
 from bs4 import BeautifulSoup
-import requests
 import re
+from IPython.display import HTML
+import requests
 
-def scraperino(url):
-    website = str(url)
-    html = requests.get(website)
+def scraper(url):
+    html = requests.get(url)
+    soup = BeautifulSoup(html.content, 'html.parser')
 
-    s = BeautifulSoup(html.content, 'html.parser')
-    description = s.body.findAll('div', {'class': 'rte'})
+    # Create a file with the allergens
+    file = open('scraped_data.txt', 'w')
+    file.write(soup.prettify())
+    file.flush()
+    file.close()
+    
+    # Create a .txt file with all the links of the scraped page
+    # For a tags with href add , attrs={'href': re.compile('^https')} to find_all()
+    file = open('scraped_links.txt', 'w')
+    for link in soup.find_all('a'):
+        soup_link = str(link.get('href'))
+        # convert relative links to base url + link
+        if 'punkcake.rocks' and 'https' not in soup_link:
+            soup_link = 'punkcake.rocks' + soup_link
+            file.write(soup_link + '\n')
+        else:
+            file.write(soup_link + '\n')
+            print(soup_link)
 
-    print(description)
+    file.flush()
+    file.close()
+    
+    try:
+        #Get title from product page
+        title_html = soup.body.findAll('h1', {'class': 'h2 product-single__title'})
+        title = re.findall('">[a-zA-Z]+.+.?', str(title_html))[0].split('">')[1].capitalize()
+        
+        #Get allergen info from description and filter the allergens
+        allergen_html = soup.body.findAll('div', {'class': 'rte'})
+        allergens = re.findall('Allergens:.[a-zA-Z]+.+.?', str(allergen_html))[0].split("Allergens:")
+        allergens = allergens[1].split("</span>")[0].capitalize()
 
-scraperino('https://punkcake.rocks/collections/cakes/products/triple-hazelnut-cake')
+        # Create a file with the allergens
+        file = open('allergen_data.txt', 'w')
+        file.write(title + ' - ' + allergens)
+        file.flush()
+        file.close()
+    except:
+        pass
+    
+
+scraper('https://punkcake.rocks')
