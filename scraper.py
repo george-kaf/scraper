@@ -1,10 +1,8 @@
 from bs4 import BeautifulSoup
 import re
-from IPython.display import HTML
 import requests
-from pprint import pprint
 
-def scraper(url):
+def scraper(url, base_url):
     # Remove duplicate links from file
     def remove_duplicates():
         lines = open('scraped_links.txt', 'r')
@@ -31,8 +29,8 @@ def scraper(url):
             # remove any id links
             if '#' not in soup_link:
                 # convert relative links to base url + link
-                if 'punkcake.rocks' and 'https' not in soup_link:
-                    soup_link = 'punkcake.rocks' + soup_link
+                if base_url and 'http' not in soup_link:
+                    soup_link = str(base_url) + soup_link
                     file.write(soup_link + ', \n')
                 else:
                     file.write(soup_link + ', \n')
@@ -54,8 +52,8 @@ def scraper(url):
         file.flush()
         file.close()
     except:
-        pass
+        print('No products in current page.')
 
     remove_duplicates()
 
-scraper('https://punkcake.rocks')
+scraper('https://punkcake.rocks', 'punkcake.rocks')
