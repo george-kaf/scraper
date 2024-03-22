@@ -37,25 +37,6 @@ def scraper(url, base_url):
                 else:
                     file.write(soup_link + ", \n")
 
-    # Create a file with the allergens
-    try:
-        # Get title from product page
-        title_html = soup.body.findAll("h1", {"class": "h2 product-single__title"})
-        title = re.findall('">[a-zA-Z]+.+.?', str(title_html))[0].split('">')[1].capitalize()
-
-        # Get allergen info from description and filter the allergens
-        allergen_html = soup.body.findAll("div", {"class": "rte"})
-        allergens = re.findall("Allergens:.[a-zA-Z]+.+.?", str(allergen_html))[0].split("Allergens:")
-        allergens = allergens[1].split("</span>")[0].capitalize()
-
-        # Create a file with the allergens
-        file = open("allergen_data.txt", "w")
-        file.write(title + " - " + allergens)
-        file.flush()
-        file.close()
-    except:
-        print("No products in current page.")
-
     remove_duplicates()
 
 
