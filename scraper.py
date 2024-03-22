@@ -1,5 +1,3 @@
-import re
-
 import requests
 from bs4 import BeautifulSoup
 
@@ -38,6 +36,3 @@ def scraper(url, base_url):
                     file.write(soup_link + ", \n")
 
     remove_duplicates()
-
-
-scraper("https://punkcake.rocks", "punkcake.rocks")
